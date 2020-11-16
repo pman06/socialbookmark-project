@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Login | {{ block.super }}{% endblock %}
+{% block content %}
+  <div class="">
+    {% if request.user.is_authenticated %}
+    <h1>Already logged in</h1>
+      <p>You are already logged in. Please <a href="{% url 'dashboard' %}">click to view Dashboard</a> </p>
+    {% else %}
+      <h1>Log in</h1>
+
+      <p>Please, use the following form to log-in<. If you don't have an account, please <a href="{% url 'register' %}">register here</a></p>
+
+      <div class="float-left">
+        <form action="{% url 'login' %}" method="post" novalidate>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="hidden" name="next" value="{{ next }}">
+          <input type="submit" class="btn btn-success" value="Log-in">
+        </form>
+        <p><a href="{% url 'password_reset' %}">Forgotten your password?</a> </p>
+
+      </div>
+    {% endif %}
+    <div class="float-right">
+      <ul class="list-unstyled">
+        <li>
+          <a class="btn btn-primary" style="background-color:#4267B2" href="{% url 'social:begin' 'facebook' %}">Sing in with Facevook</a>
+        </li>
+        <li class="twitter">
+          <a href="{% url 'social:begin' 'twitter' %}">Login with Twitter</a>
+        </li>
+        <li class="google">
+          <a href="{% url 'social:begin' 'google-oauth2' %}">Login withGoogle</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+{% endblock %}
