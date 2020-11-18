@@ -51,3 +51,16 @@ input[type=submit], a.button {
     float:left;
     font-size:13px;
 }
+
+/* Images */
+.image-preview, .image-detail {
+    max-width:300px;
+    float:left;
+    margin:0 20px 20px 0;
+}
+
+.image-detail { margin-top:20px; }
+.image-info div {
+    padding:20px 0;
+    overflow:auto;
+}
