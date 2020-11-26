@@ -111,7 +111,7 @@ a.like:hover{
 #people-list .user {
     width:180px;
     float:left;
-    overflow:auto;
+    /* overflow:auto; */
     padding:10px;
 }
 #people-list .info { text-align:center; }

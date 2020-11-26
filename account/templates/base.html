@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     {# font Fontawesome #}
     <script src="https://kit.fontawesome.com/6bccc1c604.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=1.1">
 
   </head>
   <body>
@@ -24,7 +24,7 @@
             {% if request.user.is_authenticated %}
               <li class="{% if section == 'dashboard' %}active{% endif %} nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
               <li class="{% if section == 'images' %}active{% endif %} nav-item"><a class="nav-link" href="{% url 'images:list' %}">Images</a></li>
-              <li class="{% if section == 'people' %}active{% endif %} nav-item"><a class="nav-link" href="#">People</a></li>
+              <li class="{% if section == 'people' %}active{% endif %} nav-item"><a class="nav-link" href="{% url 'user_list' %}">People</a></li>
 
             {% endif %}
           </ul>
