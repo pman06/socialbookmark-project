@@ -8,14 +8,24 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
 from django import forms
 
+from actions.models import Action
 from .models import Profile,Contact
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
+from actions.utils import create_action
 # Create your views here.
 
 @login_required
 def dashboard(request):
+    #display all actions by default
+    actions = Action.objects.exclude(user= request.user)
+    following_ids = request.user.following.values_list('id', flat=True)
 
-    return render(request,'account/dashboard.html', {'section':'dashboard'})
+    if following_ids:
+        #If user is following others, retrieve only their actions
+        actions = actions.filter(user_id__in=following_ids)
+    actions = actions.select_related('user', 'user__profile').prefetch_related('target')[:10]
+
+    return render(request,'account/dashboard.html', {'section':'dashboard', 'actions':actions})
 
 
 def register(request):
@@ -27,6 +37,7 @@ def register(request):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
+            create_action(new_user, 'has created an account')
             return render(request, 'account/register_done.html',{'new_user':new_user})
     else:
         form = UserRegistrationForm()
@@ -75,7 +86,8 @@ def user_follow(request):
         try:
             user = User.objects.get(id=user_id)
             if action == 'follow':
-                Contact.objects.get_or_create(user_from = user, user_to=user)
+                Contact.objects.get_or_create(user_from = request.user, user_to=user)
+                create_action(request.user, 'is following', user)
             else:
                 Contact.objects.filter(user_from = request.user, user_to =user).delete()
             return JsonResponse({'status':'ok'})
